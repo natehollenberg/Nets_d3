@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D3 Project</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/nouislider.css">
+</head>
+<body>
+<div class="container-fluid" style="height: 100vh; padding-top: 0vh; padding-left: 2vh; padding-right: 2vh">
+
+    <!--    Title row-->
+    <div class="row main_title justify-content-center">
+        <h1>Brooklyn Nets Modeling Project Visualization</h1>
+    </div>
+    <!--    Two Forms and Slider row-->
+    <div class="row">
+        <!--    First column which will contain the two forms-->
+        <div class = "col-sm-6 visualizations" style="height: 33vh; overflow-y: scroll">
+            <!--    Form for Y axis-->
+            <div class="row justify-content-center form-group">
+                <strong>Choose Statistic on Y-Axis</strong>
+                <select class="form-control" id="scatter_plot_y" style="font-size: 12px" onchange="Slider.wrangleData()">
+                    <option value="PER">PER</option>
+                    <option value="TSP">True Shooting %</option>
+                    <option value="USGP">Usage %</option>
+                    <option value="3PAr">Three-Point Rate</option>
+                    <option value="3Pp">Three-Point %</option>
+                    <option value="ast/to">Assist/Turnover Ratio</option>>
+                    <option value="TRBP">Rebounding %</option>
+                    <option value="ORBP">Offensive Rebounding %</option>
+                    <option value="DRBP">Defensive Rebounding %</option>
+                </select>
+            </div>
+            <!--    Form for data-->
+            <div class="row justify-content-center form-group">
+                <strong>Choose a Subset of Data</strong>
+                <select class="form-control" id="data_y" style="font-size: 12px" onchange="Slider.wrangleData()">
+                    <option value="All">All Data</option>
+                    <option value="Lottery">Lottery Projections</option>
+                    <option value="First">1st Round</option>
+                    <option value="Second">2nd Round</option>
+                </select>
+            </div>
+            <!--    Instructions-->
+            <div class="row">
+                <p id="instructions" style="margin-left: 3vh; margin-left: 3vh; font-size: 12px">
+                    Hover a point to see a player description and click to see their stats! Predictions are based off
+                    Random Forest model.
+                </p>
+            </div>
+        </div>
+        <!--    Slider Column-->
+        <div class = "col-sm-6 visualizations" style="height: 30vh; overflow-y: scroll">
+            <div class="row">
+                <div class="slider" id ='slider-d' style="width: 60vh">
+                    <div class="row" id="slider-title" style="margin-bottom: 1vh">
+                        <p id="cutoff">Drag to Choose Cutoff for Predicted Probability</p>
+                    </div>
+                    <!--    Table for slider interpretation-->
+                    <div class ="row">
+                        <table id="cutoff-table" style="width:100%; height: 50%">
+                            <tr>
+                                <th></th>
+                                <th>All Data</th>
+                                <th>Lottery</th>
+                                <th>1st Round</th>
+                                <th>2nd Round</th>
+                            </tr>
+                            <tr>
+                                <td>Optimal Cutoff*</td>
+                                <td>0.351</td>
+                                <td>0.533</td>
+                                <td>0.387</td>
+                                <td>0.244</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <!--    Qualifier-->
+                    <div class="row">
+                        <p id="caption" style="margin-top: 0.5vh">
+                            *Optimal cutoff maximizes True Positive Rate and minimizes False Positive Rate.
+                            based on validation set. 0.5 is commonly used cutoff. Higher cutoff is more conservative,
+                            while a lower cutoff is more aggressive.
+                        </p>
+                    </div>
+                    <!--    Slider-->
+                    <div class="row sliders" id = "slider-Predictions" style="margin-top: 4vh"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--    Stats Table-->
+        <div class="col-sm-4" id="tab" style="height: 100vh">
+            <div class="row">
+                <table id="stat-table" style="width:80%">
+                    <tr>
+                        <th>Category</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>ID</td>
+                        <td id = 'ID'></td>
+                    </tr>
+                    <tr>
+                        <td >Age</td>
+                        <td id = 'Age'></td>
+                    </tr>
+                    <tr>
+                        <td >Height</td>
+                        <td id = 'Height'></td>
+                    </tr>
+                    <tr>
+                        <td >Position</td>
+                        <td id = 'Pos'></td>
+                    </tr>
+                    <tr>
+                        <td >Rank</td>
+                        <td id = 'Rank'></td>
+                    </tr>
+                    <tr>
+                        <td >Predicted Probability</td>
+                        <td id = 'pred'></td>
+                    </tr>
+                    <tr>
+                        <td >Usage %</td>
+                        <td id = 'Usage'></td>
+                    </tr>
+                    <tr>
+                        <td >PER</td>
+                        <td id = 'PER'></td>
+                    </tr>
+                    <tr>
+                        <td >True Shooting %</td>
+                        <td id = TS></td>
+                    </tr>
+                    <tr>
+                        <td >Three-Point Rate</td>
+                        <td id = 'three-point-rate'></td>
+                    </tr>
+                    <tr>
+                        <td >Three-Point %</td>
+                        <td id = 'three-point-%'></td>
+                    </tr>
+                    <tr>
+                        <td >Assist %/Turnover %</td>
+                        <td id = 'AST'></td>
+                    </tr>
+                    <tr>
+                        <td >Defensive Rebounding %</td>
+                        <td id = 'DRB'></td>
+                    </tr>
+                    <tr>
+                        <td >Offensive Rebounding %</td>
+                        <td id = 'ORB'></td>
+                    </tr>
+                    <tr>
+                        <td >Total Rebounding %</td>
+                        <td id = 'TRB'></td>
+                    </tr>
+                    <tr>
+                        <td >Steal %</td>
+                        <td id = Steals></td>
+                    </tr>
+                    <tr>
+                        <td >Block %</td>
+                        <td id = 'Blocks'></td>
+                    </tr>
+                    <tr>
+                        <td >Free-Throw Rate</td>
+                        <td id = 'free-throw-rate'></td>
+                    </tr>
+                    <tr>
+                        <td >Free-Throw %</td>
+                        <td id = 'free-throw-%'></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class = "col-sm-8" id="scatter">
+            <!--    Scatter plot-->
+            <div class="row" id="scatter_plot" style="height: 55vh"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="js/d3.min.js"></script>
+<script src="js/math.js"></script>
+<script src="js/d3-tip.js"></script>
+<script src="js/nouislider.js"></script>
+<script src="js/wNumb.js"></script>
+
+
+
+<script src="js/ScatterPlot.js"></script>
+<script src="js/Slider.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

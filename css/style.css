@@ -1,0 +1,55 @@
+/* custom css rules */
+
+body {
+	font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+}
+.d3-tip {
+	font-size: 12px;
+}
+
+#slider-d {
+	margin: auto;
+}
+#cutoff{
+	margin: auto;
+	text-align: center;
+	font-weight: bold;
+}
+#instructions {
+	font-weight: bold;
+	margin: auto;
+	text-align: center;
+}
+
+.sliders .noUi-connect {
+	background: #2E86C1;
+}
+
+table, th, td {
+	border: 1px solid black;
+	margin: auto;
+	table-layout: fixed;
+}
+.tab {
+	margin: auto;
+}
+#caption {
+	font-size: xx-small;
+}
+
+.form-control{
+	margin-left: 30%;
+	margin-right: 30%;
+}
+#scatter_plot {
+	overflow: auto;
+}
+#stat-table {
+	font-size: 12px;
+}
+#cutoff-table {
+	font-size: 13px;
+}
